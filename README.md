@@ -4,6 +4,39 @@ Explore the concept of UNIX signals as a form of Inter-Process Communication (IP
 
 Explore the fascinating world of UNIX signals and learn how they serve as a powerful means for Inter-Process Communication (IPC).
 
+```sql
+Signal Trapping
++------------+        +-------------+          +---------------+      +-----------+
+|            |        |             |          |               |      |           |
+|   Process  |        |  OS Kernel  |          | Signal Trap   |      |  Signal   |
+|            |  (1)   |             |   (2)   | (Handler set) | (3)  |  Source   |
+|    PID: X  | <----> |  Signal     | <------> |  Function     | <--- | (User/    |
+|            |        |  Management |          |  Address: Y   |      |  System)  |
++------------+        +-------------+          +---------------+      +-----------+
+raise():
++--------------------------+
+|                          |
+|     Process              |
+|        |                 |
+|    PID: Z                |
+|        |   raise()       |
+|        |    (signal)     |
+|        v                 |
+|  Signal delivered to     |
+|  registered handler      |
+|  within the same process |
+|                          |
++--------------------------+
+kill():
++------------+                         +------------+
+|            |     kill(signal, pid)   |            |
+|  Process A |                         |  Process B |
+|   PID: M   | ----------------------> |    PID: N  |
+|            |                         |            |
+| Source     |                         | Recipient  |
++------------+                         +------------+
+```
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -227,35 +260,3 @@ Inter-Process Communication (IPC) allows processes to communicate and synchroniz
 While signals are a basic form of IPC, their simplicity and efficiency make them suitable for specific scenarios. For more complex IPC requirements, mechanisms like pipes, message queues, and shared memory might be more appropriate.
 
 
-```sql
-Signal Trapping
-+------------+        +-------------+          +---------------+      +-----------+
-|            |        |             |          |               |      |           |
-|   Process  |        |  OS Kernel  |          | Signal Trap   |      |  Signal   |
-|            |  (1)   |             |   (2)   | (Handler set) | (3)  |  Source   |
-|    PID: X  | <----> |  Signal     | <------> |  Function     | <--- | (User/    |
-|            |        |  Management |          |  Address: Y   |      |  System)  |
-+------------+        +-------------+          +---------------+      +-----------+
-raise():
-+--------------------------+
-|                          |
-|     Process              |
-|        |                 |
-|    PID: Z                |
-|        |   raise()       |
-|        |    (signal)     |
-|        v                 |
-|  Signal delivered to     |
-|  registered handler      |
-|  within the same process |
-|                          |
-+--------------------------+
-kill():
-+------------+                         +------------+
-|            |     kill(signal, pid)   |            |
-|  Process A |                         |  Process B |
-|   PID: M   | ----------------------> |    PID: N  |
-|            |                         |            |
-| Source     |                         | Recipient  |
-+------------+                         +------------+
-```
